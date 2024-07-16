@@ -9,10 +9,15 @@ import {
 import './index.css';
 import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
+import { Login, Signup } from './pages/auth'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}></Route>
+    <>
+      <Route path="/" element={<App />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/signup" element={<Signup />}></Route>
+    </>
   )
 );
 
