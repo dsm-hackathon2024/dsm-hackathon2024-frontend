@@ -9,17 +9,27 @@ import {
 import './index.css';
 import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
+import { Login, Signup } from './pages/auth'
+import ReduxProvider from './utils/store/Provider';
+import Toaster from './utils/toast/Toaster';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}></Route>
+    <>
+      <Route path="/" element={<App />}></Route>
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/signup" element={<Signup />}></Route>
+    </>
   )
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ReduxProvider>
+      <RouterProvider router={router} />
+      <Toaster />
+    </ReduxProvider>
   </React.StrictMode>
 );
 
