@@ -2,6 +2,7 @@ import styled from "styled-components"
 import { Text } from "../../components"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "../../utils/toast/toast"
 
 export const Login = () => {
     const [id, setId] = useState('')
@@ -31,7 +32,7 @@ export const Login = () => {
                     </InputPadding>
                 </InputContianer>
                 <ButtonContainer>
-                    <Button>로그인</Button>
+                    <Button onClick={() => toast.success('로그인 테스트')}>로그인</Button>
                     <ButtonDiv>
                         <ButtonDivLine />
                         <Text type='subTitleLarge' color='#B6B4B4'>또는</Text>
