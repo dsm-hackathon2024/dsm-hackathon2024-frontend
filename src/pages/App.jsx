@@ -1,8 +1,11 @@
 import styled from 'styled-components';
+import { Button } from '../components/button/Button';
 
 function App() {
   return (
     <Container>
+      <Button/>
+      <Button>음음</Button>
       main
     </Container>
   );
