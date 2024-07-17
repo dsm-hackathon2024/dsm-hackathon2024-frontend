@@ -3,8 +3,7 @@ import { Text } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import { deleteCookie, getCookie } from '../../utils/cookie';
 import { useEffect, useState } from 'react';
-import { getMyData } from '../../api';
-import { getRank } from '../../api/user/getRank';
+import { getMyData, getRank } from '../../api';
 import { toast } from '../../utils/toast/toast';
 // import lmages from '../images/door.png';
 
@@ -199,7 +198,6 @@ const RankBox = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 895px;
   padding: 0 60px 0 20px;
   font-weight: 400;
   font-size: 20px;

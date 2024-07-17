@@ -1,10 +1,37 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
+import { getCookie } from "../../utils/cookie"
+import { getProblem } from "../../api"
+import { toast } from "../../utils/toast/toast"
 
 const answerIndexList = ['①', '②', '③', '④', '⑤']
 
 export const ProblemDatail = () => {
-    const [data, setData] = useState(['시장 실패는 재화의 비경합성으로 인해 발생한다.', '시장 실패는 재화의 비경합성으로 인해 발생한다.', '시장 실패는 재화의 비경합성으로 인해 발생한다.'])
+    const navigate = useNavigate()
+    const [data, setData] = useState([])
+    const [problemIndex, setProblemIndex] = useState(0)
+
+    const getData = async () => {
+        await getProblem().then(res => {
+            setData(prev => [...prev, { ...res.data, result: '' }])
+
+        }).catch(() => {
+            toast.error('뭔가 문제가 발생했습니다.')
+        })
+    }
+
+    useEffect(() => {
+        const token = getCookie('access_token')
+        if (token) {
+            if (data.length <= problemIndex) {
+                getData()
+            }
+        } else {
+            navigate('/')
+        }
+    }, [problemIndex])
+
     return (
         <Container>
             <TitleBox>
@@ -15,13 +42,13 @@ export const ProblemDatail = () => {
                 <ProblemBox>
                     <BlockBox>
                         <GapBox>
-                            <ProblemTitle>[1] 시장 실패 이해하기</ProblemTitle>
-                            <ProblemSubTitle>다음 사례에서 도출 할 수 있는 결론으로 가장 적절한 것은?</ProblemSubTitle>
+                            {/* <ProblemTitle>[{problemIndex + 1}] 시장 실패 이해하기</ProblemTitle> */}
+                            <ProblemSubTitle>{data[problemIndex]?.question}</ProblemSubTitle>
                         </GapBox>
                         <GapBox>
                             <AnswerBox>
                                 {
-                                    data.map((v, i) => <AnswerText key={i}>{answerIndexList[i]} {v}</AnswerText>)
+                                    data[problemIndex]?.options.map((v, i) => <AnswerText key={i}>{answerIndexList[i]} {v}</AnswerText>)
                                 }
                             </AnswerBox>
                         </GapBox>
@@ -31,11 +58,16 @@ export const ProblemDatail = () => {
                                 <ButtonText>AI 해설</ButtonText>
                             </Button>
                             <SideBox>
-                                <Button>
-                                    <img src="../assets/leftArrow.png" alt="왼쪽 화살표" />
-                                    <ButtonText>이전 문제</ButtonText>
-                                </Button>
-                                <Button>
+                                {
+                                    problemIndex ?
+                                        <Button onClick={() => setProblemIndex(prev => prev - 1)}>
+                                            <img src="../assets/leftArrow.png" alt="왼쪽 화살표" />
+                                            <ButtonText>이전 문제</ButtonText>
+                                        </Button>
+                                        :
+                                        <></>
+                                }
+                                <Button onClick={() => setProblemIndex(prev => prev + 1)}>
                                     <ButtonText>다음 문제</ButtonText>
                                     <img src="../assets/rightArrow.png" alt="오른쪽 화살표" />
                                 </Button>
@@ -121,8 +153,8 @@ const ProblemSubTitle = styled.span`
 
 const AnswerBox = styled.div`
     display: flex;
-    row-gap: 20px;
-    column-gap: 15px;
+    row-gap: 15px;
+    column-gap: 30px;
     flex-wrap: wrap;
 `
 
