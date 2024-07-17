@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { Button } from '../components/button/Button';
-import lmages from '../images/door.png';
+// import lmages from '../images/door.png';
 
 function App() {
   return (
@@ -17,7 +16,7 @@ function App() {
       <p>아이디</p>
      </Profile>
      <Images>
-      <img src={lmages} alt="로그아웃" width="30px" height="30px"/>
+      {/* <img src={lmages} alt="로그아웃" width="30px" height="30px"/> */}
       <b>로그아웃</b>
      </Images>
     </Container>

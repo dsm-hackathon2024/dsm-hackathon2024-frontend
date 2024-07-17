@@ -12,6 +12,8 @@ import reportWebVitals from './reportWebVitals';
 import { Login, Signup } from './pages/auth'
 import ReduxProvider from './utils/store/Provider';
 import Toaster from './utils/toast/Toaster';
+import { Header } from './components';
+import { ProblemReady, ProblemDatail } from './pages/problem';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +21,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<App />}></Route>
       <Route path="/login" element={<Login />}></Route>
       <Route path="/signup" element={<Signup />}></Route>
+      <Route path="/problem" element={<ProblemReady />}></Route>
+      <Route path="/problem/:id" element={<ProblemDatail />}></Route>
     </>
   )
 );
@@ -27,6 +31,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ReduxProvider>
+      <Header />
       <RouterProvider router={router} />
       <Toaster />
     </ReduxProvider>
