@@ -1,7 +1,10 @@
 import styled from "styled-components"
 import { Text } from "../../components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { toast } from "../../utils/toast/toast"
+import { postSignup } from "../../api"
+import { getCookie } from "../../utils/cookie"
 
 export const Signup = () => {
     const [id, setId] = useState('')
@@ -11,6 +14,39 @@ export const Signup = () => {
     const [rePassword, setRePassword] = useState('')
     const [showRePassword, setShowRePassword] = useState(false)
     const navigate = useNavigate()
+
+    const submitSignup = async () => {
+        const toastId = toast.loading('회원가입 중입니다...')
+        if (id.length < 6 || id.length > 12) {
+            toast.error('아이디는 6에서 12의 길이여야합니다.', toastId)
+        }
+        else if (nickname.length < 2 || nickname.length > 20) {
+            toast.error('닉네임은 2에서 20의 길이여야합니다.', toastId)
+        }
+        else if (password !== rePassword) {
+            toast.error('비밀번호를 올바르게 작성했는지 확인해주세요', toastId)
+        }
+        else if (password.length < 6 || password.length > 12) {
+            toast.error('비밀번호는 8에서 20의 길이여야합니다.', toastId)
+        } else {
+            await postSignup({
+                id,
+                password,
+                username: nickname
+            }).then(() => {
+                toast.success('회원가입에 성공했습니다!', toastId)
+            }).catch(() => {
+                toast.error('회원가입에 실패했습니다...', toastId)
+            })
+        }
+    }
+
+    useEffect(() => {
+        const token = getCookie('access_token')
+        if (token) {
+            navigate('/')
+        }
+    }, [])
 
     return (
         <Container>
@@ -47,7 +83,7 @@ export const Signup = () => {
                     </InputPadding>
                 </InputContianer>
                 <ButtonContainer>
-                    <Button>회원가입</Button>
+                    <Button onClick={submitSignup}>회원가입</Button>
                     <ButtonDiv>
                         <ButtonDivLine />
                         <Text type='subTitleLarge' color='#B6B4B4'>이미 가입 하셨나요?</Text>

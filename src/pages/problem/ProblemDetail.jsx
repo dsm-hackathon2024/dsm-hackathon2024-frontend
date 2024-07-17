@@ -21,7 +21,7 @@ export const ProblemDatail = () => {
                         <GapBox>
                             <AnswerBox>
                                 {
-                                    data.map((v, i) => <AnswerText>{answerIndexList[i]} {v}</AnswerText>)
+                                    data.map((v, i) => <AnswerText key={i}>{answerIndexList[i]} {v}</AnswerText>)
                                 }
                             </AnswerBox>
                         </GapBox>

@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 
 export const ProblemReady = () => {
+    const navigate = useNavigate()
+
     return (
         <Container>
             <ContentBox>
@@ -8,7 +11,7 @@ export const ProblemReady = () => {
                     <Title>NOIZE</Title>
                     <SubTitle>'NOIZE'을 통해 당신의 경제적 사고력을 키워보세요.</SubTitle>
                 </TitleBox>
-                <Button>문제 풀기</Button>
+                <Button onClick={() => navigate('/problem/1')}>문제 풀기</Button>
             </ContentBox>
         </Container>
     )
@@ -60,4 +63,5 @@ const Button = styled.button`
     align-items: center;
     border: none;
     outline: none;
+    cursor: pointer;
 `

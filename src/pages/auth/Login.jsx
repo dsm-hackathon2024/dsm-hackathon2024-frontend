@@ -1,14 +1,44 @@
 import styled from "styled-components"
 import { Text } from "../../components"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { toast } from "../../utils/toast/toast"
+import { getCookie, setCookie } from "../../utils/cookie"
+import { postSignin } from "../../api"
 
 export const Login = () => {
     const [id, setId] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const navigate = useNavigate()
+
+    const submitSignin = async () => {
+        const toastId = toast.loading('로그인 중입니다...')
+        if (id.length < 6 || id.length > 12) {
+            toast.error('아이디는 6에서 12의 길이여야합니다.', toastId)
+        }
+        else if (password.length < 6 || password.length > 12) {
+            toast.error('비밀번호는 8에서 20의 길이여야합니다.', toastId)
+        } else {
+            await postSignin({
+                id,
+                password
+            }).then((res) => {
+                toast.success('로그인에 성공했습니다!', toastId)
+                setCookie('access_token', res.data.accessToken)
+                navigate('/')
+            }).catch(() => {
+                toast.error('로그인에 실패했습니다...', toastId)
+            })
+        }
+    }
+
+    useEffect(() => {
+        const token = getCookie('access_token')
+        if (token) {
+            navigate('/')
+        }
+    }, [])
 
     return (
         <Container>
@@ -32,7 +62,7 @@ export const Login = () => {
                     </InputPadding>
                 </InputContianer>
                 <ButtonContainer>
-                    <Button onClick={() => toast.success('로그인 테스트')}>로그인</Button>
+                    <Button onClick={submitSignin}>로그인</Button>
                     <ButtonDiv>
                         <ButtonDivLine />
                         <Text type='subTitleLarge' color='#B6B4B4'>또는</Text>

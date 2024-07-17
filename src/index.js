@@ -7,7 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import './index.css';
-import App from './pages/App';
+import MyPage from './pages/auth/MyPage';
 import reportWebVitals from './reportWebVitals';
 import { Login, Signup } from './pages/auth'
 import ReduxProvider from './utils/store/Provider';
@@ -18,11 +18,13 @@ import { ProblemReady, ProblemDatail } from './pages/problem';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<App />}></Route>
-      <Route path="/login" element={<Login />}></Route>
-      <Route path="/signup" element={<Signup />}></Route>
-      <Route path="/problem" element={<ProblemReady />}></Route>
-      <Route path="/problem/:id" element={<ProblemDatail />}></Route>
+      <Route element={<Header />}>
+        <Route path="/" element={<ProblemReady />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/mypage" element={<MyPage />}></Route>
+        <Route path="/problem/:id" element={<ProblemDatail />}></Route>
+      </Route>
     </>
   )
 );
@@ -31,7 +33,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ReduxProvider>
-      <Header />
       <RouterProvider router={router} />
       <Toaster />
     </ReduxProvider>
