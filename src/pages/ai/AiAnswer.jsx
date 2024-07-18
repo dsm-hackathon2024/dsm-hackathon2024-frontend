@@ -1,19 +1,51 @@
 import { useState } from "react";
 import styled from "styled-components"
+import { toast } from "../../utils/toast/toast";
+import { postPrompt } from "../../api";
 
 const AiAnswer = () => {
     const [questionWord, setQuestionWord] = useState('')
     const [data, setData] = useState([])
 
-    const submitQuestion = () => {
-        // if()
+    const submitQuestion = async () => {
+        const toastId = toast.loading('질문을 업로드하고 있습니다.')
+        if (!questionWord) {
+            toast.error('질문을 입력해주세요', toastId)
+        }
+
+        setData(prev => [...prev, { user: 'me', word: questionWord }])
+        setQuestionWord('')
+        await postPrompt(questionWord).then(res => {
+            setData(prev => [...prev, { user: 'ai', word: res.data.answer }])
+        }).catch(() => {
+            toast.error('답변을 가져오는데 문제가 발생했습니다.', toastId)
+        })
     }
 
     return (
         <Container>
             <ContentBox>
                 <AnswerBox>
-                    <MyAnswerCover>
+                    {
+                        data.map((v, i) => {
+                            if (v.user === 'me') {
+                                return (
+                                    <MyAnswerCover key={i}>
+                                        <MyAnswerBlock>{v.word}</MyAnswerBlock>
+                                    </MyAnswerCover>
+                                )
+                            }
+                            else {
+                                return (
+                                    <AiAnswerCover key={i}>
+                                        <ProfileImage src="assets/logo.png" width={50} height={50} />
+                                        <AiAnswerBlock>{v.word}</AiAnswerBlock>
+                                    </AiAnswerCover>
+                                )
+                            }
+                        })
+                    }
+                    {/* <MyAnswerCover>
                         <MyAnswerBlock>잘되는가?</MyAnswerBlock>
                     </MyAnswerCover>
                     <AiAnswerCover>
@@ -35,20 +67,20 @@ const AiAnswer = () => {
                     <AiAnswerCover>
                         <ProfileImage src="assets/logo.png" width={50} height={50} />
                         <AiAnswerBlock>아마도 그러한 것 같습니다.</AiAnswerBlock>
-                    </AiAnswerCover>
+                    </AiAnswerCover> */}
                 </AnswerBox>
                 <InputCover>
                     <Input
                         placeholder="질문을 입력해주세요"
                         onChange={(e) => setQuestionWord(e.currentTarget.value)}
-                        onKeyDown={(e) => {
+                        onKeyUp={(e) => {
                             if (e.key === 'Enter') {
-                                setQuestionWord('')
+                                submitQuestion()
                             }
                         }}
                         value={questionWord}
                     />
-                    <ArrowIcon src="assets/upArrowCircle.png" width={45} height={45} />
+                    <ArrowIcon src="assets/upArrowCircle.png" width={45} height={45} onClick={submitQuestion} />
                 </InputCover>
             </ContentBox>
         </Container>

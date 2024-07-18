@@ -98,7 +98,7 @@ export const ProblemDatail = () => {
                             </AnswerBox>
                         </GapBox>
                         <BetweenBox>
-                            <Button>
+                            <Button onClick={() => navigate('/ai')}>
                                 <img src="../assets/aiAnswer.png" alt="ai 해설 이미지" />
                                 <ButtonText>AI 해설</ButtonText>
                             </Button>
