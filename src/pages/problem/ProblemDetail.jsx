@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import styled from "styled-components"
 import { getCookie } from "../../utils/cookie"
-import { getProblem } from "../../api"
+import { getProblem, postAnswerCount } from "../../api"
 import { toast } from "../../utils/toast/toast"
 
 const answerIndexList = ['①', '②', '③', '④', '⑤']
@@ -14,15 +14,48 @@ export const ProblemDatail = () => {
 
     const getData = async () => {
         await getProblem().then(res => {
-            setData(prev => [...prev, { ...res.data, result: '' }])
+            setData(prev => ([...prev, { ...res.data, result: '' }]))
 
         }).catch(() => {
             toast.error('뭔가 문제가 발생했습니다.')
         })
     }
 
+    const submitAnswer = async (value) => {
+        if (!data[problemIndex].result) {
+            if (value === data[problemIndex].answer) {
+                toast.success('정답을 맞추셨습니다!')
+                const token = getCookie('access_token')
+                await postAnswerCount(token, data[problemIndex].level)
+            } else {
+                toast.error('아쉽게도 정답이 아니었습니다.')
+            }
+            setData(prev => ([
+                ...prev.slice(0, problemIndex),
+                {
+                    ...prev[problemIndex],
+                    result: value
+                },
+                ...prev.slice(problemIndex + 1)
+            ]))
+        } else {
+            toast.error('정답을 이미 선택하셨습니다.')
+        }
+    }
+
+    const movePage = (value) => {
+        if (!data[problemIndex] || data[problemIndex]?.result == '') {
+            toast.error('정답을 골라주세요')
+        } else {
+            setProblemIndex(prev => prev + value)
+        }
+    }
+
     useEffect(() => {
         const token = getCookie('access_token')
+        if (data.length <= problemIndex) {
+            getData()
+        }
         if (token) {
             if (data.length <= problemIndex) {
                 getData()
@@ -42,13 +75,25 @@ export const ProblemDatail = () => {
                 <ProblemBox>
                     <BlockBox>
                         <GapBox>
-                            {/* <ProblemTitle>[{problemIndex + 1}] 시장 실패 이해하기</ProblemTitle> */}
+                            <ProblemTitle>난이도: {data[problemIndex]?.level}</ProblemTitle>
                             <ProblemSubTitle>{data[problemIndex]?.question}</ProblemSubTitle>
                         </GapBox>
                         <GapBox>
                             <AnswerBox>
                                 {
-                                    data[problemIndex]?.options.map((v, i) => <AnswerText key={i}>{answerIndexList[i]} {v}</AnswerText>)
+                                    data[problemIndex]?.options.map((v, i) =>
+                                        <AnswerText
+                                            key={i}
+                                            onClick={() => submitAnswer(v)}
+                                            style={{
+                                                backgroundColor: v === data[problemIndex].result ? '#5A90F8' : 'transparent',
+                                                color: v === data[problemIndex].result ? '#FFFFFF' : '#000000',
+                                                border: `3px solid ${(data[problemIndex].result && v === data[problemIndex].answer) ? '#3FA6FF' : 'transparent'}`
+                                            }}
+                                        >
+                                            {answerIndexList[i]} {v}
+                                        </AnswerText>
+                                    )
                                 }
                             </AnswerBox>
                         </GapBox>
@@ -60,14 +105,14 @@ export const ProblemDatail = () => {
                             <SideBox>
                                 {
                                     problemIndex ?
-                                        <Button onClick={() => setProblemIndex(prev => prev - 1)}>
+                                        <Button onClick={() => movePage(-1)}>
                                             <img src="../assets/leftArrow.png" alt="왼쪽 화살표" />
                                             <ButtonText>이전 문제</ButtonText>
                                         </Button>
                                         :
                                         <></>
                                 }
-                                <Button onClick={() => setProblemIndex(prev => prev + 1)}>
+                                <Button onClick={() => movePage(1)}>
                                     <ButtonText>다음 문제</ButtonText>
                                     <img src="../assets/rightArrow.png" alt="오른쪽 화살표" />
                                 </Button>
@@ -154,12 +199,19 @@ const ProblemSubTitle = styled.span`
 const AnswerBox = styled.div`
     display: flex;
     row-gap: 15px;
-    column-gap: 30px;
+    column-gap: 25px;
     flex-wrap: wrap;
 `
 
 const AnswerText = styled(ProblemSubTitle)`
     cursor: pointer;
+    padding: 3px 3px;
+    border-radius: 10px;
+
+    &:hover {
+        background-color: #5A90F8 !important;
+        color: #FFFFFF !important;
+    }
 `
 
 const BetweenBox = styled.div`

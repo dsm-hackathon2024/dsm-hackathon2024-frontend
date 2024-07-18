@@ -147,7 +147,7 @@ const InputPadding = styled.div`
 
 const InputBox = styled.input`
     color: black;
-    font-family: 'Noto Sans';
+    font-family: 'Noto Sans KR';
     font-size: 20px;
     height: 40px;
     width: 100%;
@@ -181,7 +181,7 @@ const Button = styled.div`
     background-color: #5A90F8;
     border-radius: 20px;
     color: #FFFFFF;
-    font-family: 'Noto Sans';
+    font-family: 'Noto Sans KR';
     font-size: 25px;
     font-weight: bold;
     cursor: pointer;

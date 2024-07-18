@@ -7,7 +7,7 @@ export const Text = ({ type, children, color, style }) => {
 
 const TextBase = styled.span`
     color: black;
-    font-family: 'Noto Sans';
+    font-family: 'Noto Sans KR';
 `
 
 export const TextList = {

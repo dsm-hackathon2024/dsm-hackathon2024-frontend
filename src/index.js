@@ -14,6 +14,7 @@ import ReduxProvider from './utils/store/Provider';
 import Toaster from './utils/toast/Toaster';
 import { Header } from './components';
 import { ProblemReady, ProblemDatail } from './pages/problem';
+import AiAnswer from './pages/ai/AiAnswer';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/mypage" element={<MyPage />}></Route>
         <Route path="/problem" element={<ProblemDatail />}></Route>
+        <Route path="/ai" element={<AiAnswer />}></Route>
       </Route>
     </>
   )

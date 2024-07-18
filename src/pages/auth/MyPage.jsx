@@ -5,12 +5,14 @@ import { deleteCookie, getCookie } from '../../utils/cookie';
 import { useEffect, useState } from 'react';
 import { getMyData, getRank } from '../../api';
 import { toast } from '../../utils/toast/toast';
+import { ProfileEditModal } from '../../components/ProfileEditModal';
 // import lmages from '../images/door.png';
 
 const MyPage = () => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState()
   const [rankData, setRankData] = useState([])
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   const getUserData = async (token) => {
     await getMyData(token).then(res => {
@@ -57,7 +59,7 @@ const MyPage = () => {
             </ProfileTextBox>
           </ProfileBox>
           <ButtonBox>
-            <EditButton>프로필 편집</EditButton>
+            <EditButton onClick={() => setIsOpenModal(true)}>프로필 편집</EditButton>
             <LogoutButton onClick={logout}>
               <img src='../assets/door.png' width={33} />
               <span>로그아웃</span>
@@ -91,6 +93,12 @@ const MyPage = () => {
           }
         </RankContainer>
       </ContentBox>
+      {
+        isOpenModal ?
+          <ProfileEditModal setIsOpenModal={setIsOpenModal} userData={userData} />
+          :
+          <></>
+      }
     </Container>
   )
 }

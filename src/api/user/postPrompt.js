@@ -16,10 +16,13 @@
 
 import { instance } from ".."
 
-export const getProblem = async () => {
+export const postPrompt = async (value) => {
   return await instance({
-    method: 'GET',
+    method: 'POST',
     baseURL: 'http://192.168.0.26:8000',
-    url: 'data'
+    url: 'prompt',
+    data: {
+      prompt: value
+    }
   })
 }

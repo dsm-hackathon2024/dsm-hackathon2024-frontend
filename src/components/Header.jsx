@@ -35,8 +35,8 @@ export const Header = () => {
                 {
                     hasToken ?
                         <GapCursorProfile onClick={() => navigate('/mypage')}>
-                            <Text type='subTitleLarge'>{userData.id}</Text>
-                            <ProfileImage src={userData.profile || "../assets/profile.png"} alt="profile" />
+                            <Text type='subTitleLarge'>{userData.userId}</Text>
+                            <ProfileImage src={userData.profile || "../assets/profile.png"} alt="profile" style={{ objectFit: 'cover' }} />
                         </GapCursorProfile>
                         :
                         <GapBox>
